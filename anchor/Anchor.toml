@@ -12,7 +12,7 @@ step_buddy = "6j5EQpFzAXqrq2XiYvSDDSepLGaVAdKkPA3hBGMFx8Zm"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
