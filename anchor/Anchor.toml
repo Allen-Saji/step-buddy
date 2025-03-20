@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-step_buddy = "7ns8ZDBia5ySTiqesdAmiWNC4knW4NnhXc5B12btky7w"
+step_buddy = "6j5EQpFzAXqrq2XiYvSDDSepLGaVAdKkPA3hBGMFx8Zm"
 
 [registry]
 url = "https://api.apr.dev"
