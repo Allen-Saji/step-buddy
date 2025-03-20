@@ -7,7 +7,7 @@ mod errors;
 use state::*;
 pub use errors::ErrorCode;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("6j5EQpFzAXqrq2XiYvSDDSepLGaVAdKkPA3hBGMFx8Zm");
 
 #[program]
 pub mod step_buddy {
@@ -37,10 +37,11 @@ pub mod step_buddy {
 
     pub fn submit_verification(
         ctx: Context<SubmitVerification>,
+        _challenge_id: u64,
         step_count: u32,
         verification_day: u16,
     ) -> Result<()> {
-        instructions::verification::submit_verification(ctx, step_count, verification_day)
+        instructions::verification::submit_verification(ctx,_challenge_id, step_count, verification_day)
     }
 
     pub fn process_rewards<'info>(

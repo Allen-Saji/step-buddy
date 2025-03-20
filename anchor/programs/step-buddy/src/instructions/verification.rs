@@ -4,6 +4,7 @@ use crate::errors::ErrorCode;
 
 pub fn submit_verification(
     ctx: Context<SubmitVerification>,
+    _challenge_id: u64,
     step_count: u32,
     verification_day: u16,
 ) -> Result<()> {

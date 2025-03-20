@@ -1,4 +1,3 @@
-// programs/step-buddy/src/state/context.rs
 use anchor_lang::prelude::*;
 use super::{Challenge, Participant};
 
@@ -31,6 +30,7 @@ pub struct InitializeChallenge<'info> {
 #[instruction(challenge_id: u64)]
 pub struct JoinChallenge<'info> {
     #[account(
+        mut,
         seeds = [b"challenge".as_ref(), &challenge_id.to_le_bytes()],
         bump = challenge.bump,
     )]
