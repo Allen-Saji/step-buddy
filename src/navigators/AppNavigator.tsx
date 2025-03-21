@@ -9,7 +9,12 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { Appearance, useColorScheme } from "react-native";
+import {
+  Appearance,
+  useColorScheme,
+  ActivityIndicator,
+  View,
+} from "react-native";
 import * as Screens from "../screens";
 import { HomeNavigator } from "./HomeNavigator";
 import { StatusBar } from "expo-status-bar";
@@ -18,6 +23,18 @@ import {
   MD3LightTheme,
   adaptNavigationTheme,
 } from "react-native-paper";
+import { useAuth } from "../components/auth/auth-context";
+
+// Import the LoginScreen
+import LoginScreen from "../screens/LoginScreen";
+
+// Theme colors
+const THEME = {
+  primary: "#7C4DFF", // Purple
+  dark: "#212121", // Dark Gray/Black
+  accent: "#FFFF00", // Yellow
+  light: "#E0E0E0", // Light Gray
+};
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -33,7 +50,9 @@ import {
  */
 
 type RootStackParamList = {
+  Login: undefined;
   Home: undefined;
+  HomeStack: undefined;
   Settings: undefined;
   // 🔥 Your screens go here
 };
@@ -48,15 +67,56 @@ declare global {
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
+  const { user, loading } = useAuth();
+
+  // Show loading screen while checking authentication
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: THEME.light,
+        }}
+      >
+        <ActivityIndicator size="large" color={THEME.primary} />
+      </View>
+    );
+  }
+
   return (
-    <Stack.Navigator initialRouteName={"Home"}>
-      <Stack.Screen
-        name="HomeStack"
-        component={HomeNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
-      {/** 🔥 Your screens go here */}
+    <Stack.Navigator
+      initialRouteName={user ? "HomeStack" : "Login"}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: THEME.primary,
+        },
+        headerTintColor: THEME.light,
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+      }}
+    >
+      {user ? (
+        // Authenticated user stack
+        <>
+          <Stack.Screen
+            name="HomeStack"
+            component={HomeNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
+          {/** 🔥 Your screens go here */}
+        </>
+      ) : (
+        // Non-authenticated user stack
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 };
@@ -71,12 +131,17 @@ export const AppNavigator = (props: NavigationProps) => {
     reactNavigationDark: NavigationDarkTheme,
   });
 
+  // Apply our custom theme colors to the combined themes
   const CombinedDefaultTheme = {
     ...MD3LightTheme,
     ...LightTheme,
     colors: {
       ...MD3LightTheme.colors,
       ...LightTheme.colors,
+      primary: THEME.primary,
+      background: THEME.light,
+      text: THEME.dark,
+      accent: THEME.accent,
     },
   };
   const CombinedDarkTheme = {
@@ -85,6 +150,10 @@ export const AppNavigator = (props: NavigationProps) => {
     colors: {
       ...MD3DarkTheme.colors,
       ...DarkTheme.colors,
+      primary: THEME.primary,
+      background: THEME.dark,
+      text: THEME.light,
+      accent: THEME.accent,
     },
   };
 
